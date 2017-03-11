@@ -3,19 +3,19 @@ const webpack = require('webpack')
 const path = require('path')
 
 const config = {
-  entry: './src/index.jsx',
+  entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'dist.js'
   },
   module: {
     rules: [
-      {test: /\.(js|jsx)$/, use: 'babel-loader'}
+      {test: /\.js$/, use: 'babel-loader'}
     ]
   },
   plugins: [
     // new webpack.optimize.UglifyJsPlugin(),
-    new HtmlWebpackPlugin({template: './src/index.html'})
+    new HtmlWebpackPlugin({template: './public/index.html'})
   ],
   devtool: 'source-map'
 }
