@@ -14,16 +14,20 @@ export default class CardElement extends Component {
     editing: false
   }
 
-  handleDoubleClick = () => {
+  toggleEdit = () => {
     this.setState({ ...this.state, editing: true })
   }
 
   handleSubmit = e => {
     const nodeContent = e.target.value.trim()
     if (e.which === ENTER_KEY_CODE) {
-      this.props.editCard(this.props.cardId, this.props.node.id, nodeContent)
-      this.setState({ ...this.state, editing: false })
+      this.handleSave()
     }
+  }
+
+  handleSave = () => {
+    this.props.editCard(this.props.cardId, this.props.node.id, this.state.content)
+    this.setState({ ...this.state, editing: false })
   }
 
   handleChange = e => {
@@ -31,22 +35,54 @@ export default class CardElement extends Component {
   }
 
   render() {
-    if (this.state.editing) {
-    return (
-      <input
-        type="text"
-        autoFocus="true"
-        value={this.state.content}
-        onChange={this.handleChange}
-        onKeyDown={this.handleSubmit} />
-    )
-    } else {
-      switch (this.props.node.type) {
-        case 'title':
-          return <h1 onDoubleClick={this.handleDoubleClick}>{this.state.content}</h1>
-        case 'paragraph':
-          return <p onDoubleClick={this.handleDoubleClick}>{this.state.content}</p>
-      }
+    let innerContent = this.state.content
+    switch (this.props.node.type) {
+      case 'title':
+        if (this.state.editing) {
+          innerContent =
+            <input
+              className='input'
+              type="text"
+              autoFocus="true"
+              placeholder={this.state.content}
+              onChange={this.handleChange}
+              onKeyDown={this.handleSubmit}
+              onBlur={this.handleSave} />
+        }
+        return (
+          <header className='card-header'>
+            <p className='card-header-title'>{innerContent}</p>
+            <a className="card-header-icon" onClick={this.toggleEdit}>
+              <span className="icon">
+                <i className="fa fa-pencil-square-o"></i>
+              </span>
+            </a>
+          </header>
+        )
+      case 'paragraph':
+        if (this.state.editing) {
+          innerContent =
+            <textarea
+              className='textarea'
+              type="text"
+              autoFocus="true"
+              placeholder={this.state.content}
+              onChange={this.handleChange}
+              onKeyDown={this.handleSubmit}
+              onBlur={this.handleSave} />
+        }
+        return (
+          <div onDoubleClick={this.handleDoubleClick} className='card-content'>
+            <div className='content'>
+              {innerContent}
+            <a className="card-header-icon" onClick={this.toggleEdit}>
+              <span className="icon">
+                <i className="fa fa-pencil-square-o"></i>
+              </span>
+            </a>
+            </div>
+          </div>
+        )
     }
   }
 }

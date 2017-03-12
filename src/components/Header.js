@@ -7,10 +7,21 @@ export default class Header extends Component {
 
   render() {
     return (
-      <header>
-        <h1>Cards</h1>
-        <button onClick={this.props.addCard}>+</button>
-      </header>
+      <nav className='nav'>
+        <div className='nav-center'>
+          <span className='nav-item'>
+            <h1 className='title'>Card Maker</h1>
+          </span>
+          <span className='nav-item'>
+            <a className='button is-success' onClick={this.props.addCard}>
+              <span className='icon'>
+                <i className="fa fa-plus" aria-hidden="true"></i>
+              </span>
+              <span>Add a card</span>
+            </a>
+          </span>
+        </div>
+      </nav>
     )
   }
 }

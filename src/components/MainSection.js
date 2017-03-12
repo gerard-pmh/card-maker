@@ -10,10 +10,12 @@ export default class MainSection extends Component {
   render() {
     const { cards, actions } = this.props
     return (
-      <section>
-        {cards.map(card =>
-          <CardItem key={card.id} card={card} {...actions} />
-        )}
+      <section className='section'>
+        <div className='container'>
+          {cards.map(card =>
+            <CardItem key={card.id} card={card} {...actions} />
+          )}
+        </div>
       </section>
     )
   }

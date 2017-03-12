@@ -10,14 +10,18 @@ export default class TodoItem extends Component {
   render() {
     const { card, deleteCard, editCard } = this.props
     return (
-        <div>
-          <div>
+      <div className='columns'>
+        <div className='column is-half is-offset-one-quarter'>
+          <div className='card'>
             {card.tree.map(node =>
               <CardElement key={node.id} cardId={card.id} node={node} editCard={editCard} />
             )}
           </div>
-          <button onClick={() => deleteCard(card.id)}>-</button>
         </div>
+        <div className='column'>
+          <a className='delete' onClick={() => deleteCard(card.id)}></a>
+        </div>
+      </div>
     )
   }
 }
