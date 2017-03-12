@@ -4,8 +4,8 @@ const initialState = [
   {
     id: 0,
     tree: [
-      { type: 'title', content: 'this is a title' },
-      { type: 'paragraph', content: 'this is a paragraph' }
+      { id: 0, type: 'title', content: 'this is a title' },
+      { id: 1, type: 'paragraph', content: 'this is a paragraph' }
     ]
   }
 ]
@@ -16,7 +16,10 @@ export default function cards (state = initialState, action) {
       return [
         {
           id: state.reduce((maxId, card) => Math.max(card.id, maxId), -1) + 1,
-          text: action.text
+          tree: [
+            { id: 0, type: 'title', content: 'this is a title' },
+            { id: 1, type: 'paragraph', content: 'this is a paragraph' }
+          ]
         },
         ...state
       ]
@@ -28,8 +31,15 @@ export default function cards (state = initialState, action) {
 
     case EDIT_CARD:
       return state.map(card =>
-        card.id === action.id
-          ? { ...card, tree: action.tree, content: action.content }
+        card.id === action.cardId
+          ? {
+            ...card,
+            tree: card.tree.map(node =>
+              node.id === action.nodeId
+                ? { ...node, content: action.nodeContent }
+                : node
+            )
+          }
           : card
       )
 

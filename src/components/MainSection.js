@@ -7,19 +7,13 @@ export default class MainSection extends Component {
     actions: PropTypes.object.isRequired
   }
 
-  handleClearCompleted = () => {
-    this.props.actions.clearCompleted()
-  }
-
   render() {
     const { cards, actions } = this.props
     return (
       <section>
-        <ul>
-          {cards.map(card =>
-            <CardItem key={card.id} card={card} {...actions} />
-          )}
-        </ul>
+        {cards.map(card =>
+          <CardItem key={card.id} card={card} {...actions} />
+        )}
       </section>
     )
   }

@@ -1,30 +1,37 @@
 import React, { Component, PropTypes } from 'react'
 
+const ENTER_KEY_CODE = 13
+
 export default class CardElement extends Component {
   static propTypes = {
-    onSave: PropTypes.func.isRequired,
-    type: PropTypes.string.isRequired,
-    content: PropTypes.string,
-    editing: PropTypes.bool
+    node: PropTypes.object.isRequired,
+    cardId: PropTypes.number.isRequired,
+    editCard: PropTypes.func.isRequired
   }
 
   state = {
-    text: this.props.content || this.props.type
+    content: this.props.node.content,
+    editing: false
+  }
+
+  handleDoubleClick = () => {
+    this.setState({ ...this.state, editing: true })
   }
 
   handleSubmit = e => {
-    const content = e.target.value.trim()
-    if (e.which === 13) {
-      this.props.onSave(content)
+    const nodeContent = e.target.value.trim()
+    if (e.which === ENTER_KEY_CODE) {
+      this.props.editCard(this.props.cardId, this.props.node.id, nodeContent)
+      this.setState({ ...this.state, editing: false })
     }
   }
 
   handleChange = e => {
-    this.setState({ content: e.target.value })
+    this.setState({ ...this.state, content: e.target.value })
   }
 
   render() {
-    if (this.props.editing) {
+    if (this.state.editing) {
     return (
       <input
         type="text"
@@ -34,11 +41,11 @@ export default class CardElement extends Component {
         onKeyDown={this.handleSubmit} />
     )
     } else {
-      switch (this.props.type) {
+      switch (this.props.node.type) {
         case 'title':
-          return <h1>{this.text}</h1>
+          return <h1 onDoubleClick={this.handleDoubleClick}>{this.state.content}</h1>
         case 'paragraph':
-          return <p>{this.text}</p>
+          return <p onDoubleClick={this.handleDoubleClick}>{this.state.content}</p>
       }
     }
   }
