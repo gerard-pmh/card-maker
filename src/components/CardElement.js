@@ -11,11 +11,12 @@ export default class CardElement extends Component {
 
   state = {
     content: this.props.node.content,
-    editing: false
+    editing: false,
+    isFirstEdit: true
   }
 
   toggleEdit = () => {
-    this.setState({ ...this.state, editing: true })
+    this.setState({ ...this.state, editing: !this.state.editing })
   }
 
   handleSubmit = e => {
@@ -31,55 +32,65 @@ export default class CardElement extends Component {
   }
 
   handleChange = e => {
-    this.setState({ ...this.state, content: e.target.value })
+    this.setState({ ...this.state, isFirstEdit: false, content: e.target.value })
   }
 
   render() {
-    let innerContent = this.state.content
-    switch (this.props.node.type) {
+    const { content, editing, isFirstEdit } = this.state
+    const { cardId, node } = this.props
+
+    let innerContent = content
+
+    let inputAttributes = {
+      autoFocus: 'true',
+      placeholder: content,
+      value: isFirstEdit ? '' : content,
+      onChange: this.handleChange,
+      onKeyDown: this.handleSubmit
+    }
+
+    let editIcon = (
+      <span className='icon'>
+        <i className={`fa fa-${editing ? 'save' : 'pencil-square-o'}`}></i>
+      </span>
+    )
+
+    switch (node.type) {
       case 'title':
-        if (this.state.editing) {
+        if (editing) {
           innerContent =
             <input
               className='input'
               type="text"
-              autoFocus="true"
-              placeholder={this.state.content}
-              onChange={this.handleChange}
-              onKeyDown={this.handleSubmit}
-              onBlur={this.handleSave} />
+              {...inputAttributes} />
         }
         return (
           <header className='card-header'>
-            <p className='card-header-title'>{innerContent}</p>
-            <a className="card-header-icon" onClick={this.toggleEdit}>
-              <span className="icon">
-                <i className="fa fa-pencil-square-o"></i>
-              </span>
+            <p className='card-header-title'>
+              {innerContent}
+            </p>
+            <a className="card-header-icon" onClick={editing ? this.handleSave : this.toggleEdit}>
+              {editIcon}
             </a>
           </header>
         )
       case 'paragraph':
-        if (this.state.editing) {
+        if (editing) {
           innerContent =
             <textarea
               className='textarea'
               type="text"
-              autoFocus="true"
-              placeholder={this.state.content}
-              onChange={this.handleChange}
-              onKeyDown={this.handleSubmit}
-              onBlur={this.handleSave} />
+              {...inputAttributes} />
         }
         return (
-          <div onDoubleClick={this.handleDoubleClick} className='card-content'>
+          <div className='card-content'>
             <div className='content'>
-              {innerContent}
-            <a className="card-header-icon" onClick={this.toggleEdit}>
-              <span className="icon">
-                <i className="fa fa-pencil-square-o"></i>
-              </span>
-            </a>
+              <p>{innerContent}</p>
+              <p className='has-text-centered'>
+                <a onClick={editing ? this.handleSave : this.toggleEdit}>
+                  {editIcon}
+                </a>
+              </p>
             </div>
           </div>
         )

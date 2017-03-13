@@ -16,10 +16,24 @@ export default class TodoItem extends Component {
             {card.tree.map(node =>
               <CardElement key={node.id} cardId={card.id} node={node} editCard={editCard} />
             )}
+            <div className='card-footer'>
+              <p className='card-footer-item'>
+                <small>
+                  created: {card.created.toLocaleString()}
+                </small>
+              </p>
+              <p className='card-footer-item'>
+                <small>
+                  modified: {card.modified.toLocaleString()}
+                </small>
+              </p>
+              <a className='card-footer-item' onClick={() => deleteCard(card.id)}>
+                <span className='icon'>
+                  <i className='fa fa-trash-o' aria-hidden='true'></i>
+                </span>
+              </a>
+            </div>
           </div>
-        </div>
-        <div className='column'>
-          <a className='delete' onClick={() => deleteCard(card.id)}></a>
         </div>
       </div>
     )

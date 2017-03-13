@@ -1,25 +1,26 @@
 import { ADD_CARD, DELETE_CARD, EDIT_CARD } from '../constants/ActionTypes'
 
-const initialState = [
-  {
+function generateNewCard () {
+  const today = new Date()
+  return {
     id: 0,
     tree: [
-      { id: 0, type: 'title', content: 'this is a title' },
-      { id: 1, type: 'paragraph', content: 'this is a paragraph' }
-    ]
+      { id: 0, type: 'title', content: 'Title' },
+      { id: 1, type: 'paragraph', content: 'Content ...' }
+    ],
+    created: today,
+    modified: today
   }
-]
+}
+const initialState = [ generateNewCard() ]
 
 export default function cards (state = initialState, action) {
   switch (action.type) {
     case ADD_CARD:
       return [
         {
-          id: state.reduce((maxId, card) => Math.max(card.id, maxId), -1) + 1,
-          tree: [
-            { id: 0, type: 'title', content: 'this is a title' },
-            { id: 1, type: 'paragraph', content: 'this is a paragraph' }
-          ]
+          ...generateNewCard(),
+          id: state.reduce((maxId, card) => Math.max(card.id, maxId), -1) + 1
         },
         ...state
       ]
@@ -38,7 +39,8 @@ export default function cards (state = initialState, action) {
               node.id === action.nodeId
                 ? { ...node, content: action.nodeContent }
                 : node
-            )
+            ),
+            modified: new Date()
           }
           : card
       )
